@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from flask import Flask, render_template, flash, request
 from wtforms import Form, TextField, TextAreaField, validators, StringField, SubmitField
 import re
@@ -18,11 +19,11 @@ class ReusableForm(Form):
     def hello():
         form = ReusableForm(request.form)
         df = load_jlpt_dataframe()
-        df.columns=['index','name','hiragana','kanji']
+        df.columns=['index','hiragana','romaji','kanji','name','usage']
         #print(df.head())
-        arr = word_array()
-        arr=format_arr(arr)
-        print(arr)
+        #arr = word_array()
+        #arr=format_arr(arr)
+
         print(form.errors)
         if request.method == 'POST':
             translator=Translator()
@@ -35,6 +36,7 @@ class ReusableForm(Form):
             print(word)
         verb_endings = r'[^くすぐず]'
         hiragana_full = r'[ぁ-ゟ]'
+        print(special_match(word))
         if form.validate() and special_match(word):
             if(valid_word_played(word,request.form['past_words'])):
                 if(request.form['past_words']==''):
@@ -64,10 +66,10 @@ class ReusableForm(Form):
         return render_template('game.html', form=form)
 
 def load_jlpt_dataframe():
-    df = pd.read_csv('./assets/n3_csv_tanos.csv',encoding='utf_8')
+    df = pd.read_csv('./assets/jlpt_words.csv',encoding='utf_8')
     return df
 
-def special_match(strg, search=re.compile(r'[ぁ-ゟ]').search):
+def special_match(strg, search=re.compile(r'[ぁ-ゟあ]').search):
      return bool(search(strg))
 
 def format_arr(arr):
