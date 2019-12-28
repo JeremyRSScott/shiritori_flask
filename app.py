@@ -21,8 +21,8 @@ class ReusableForm(Form):
         df = load_jlpt_dataframe()
         df.columns=['index','name','hiragana','kanji']
         #print(df.head())
-        arr = word_array()
-        arr=format_arr(arr)
+        #arr = word_array()
+        #arr=format_arr(arr)
 
         print(form.errors)
         if request.method == 'POST':
