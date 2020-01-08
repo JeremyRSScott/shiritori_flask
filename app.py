@@ -6,6 +6,7 @@ import pandas as pd
 import codecs
 import csv
 from googletrans import Translator
+import operator
 # App config.
 DEBUG = True
 app = Flask(__name__)
@@ -35,8 +36,7 @@ class ReusableForm(Form):
             past_words=''
             print(word)
         verb_endings = r'[^くすぐず]'
-        hiragana_full = r'[ぁ-ゟ]'
-        print(special_match(word))
+        hiragana_full = r'[ぁ-ゟ][^。、]'
         if form.validate() and special_match(word):
             if(valid_word_played(word,request.form['past_words'])):
                 if(request.form['past_words']==''):
@@ -46,16 +46,30 @@ class ReusableForm(Form):
                 print(word)
                 response=''
                 played=False
-                for item in arr:
-                    if word[-1:] == item[1][0] and item[1] not in past_words and item[1][-1:] != 'ん' and item[1][-1:] != 'い':
-                        past_words=past_words+','+item[1]
-                        response=item[1]
-                        played=True
-                        break
+                playable_endings=find_playable_endings(word[-1:],arr)
+                try:
+                    new_word = find_most_n_word_ending(playable_endings,arr, past_words)
+                except:
+                    new_word = request.form['word']
+                print("NEW WORD " + new_word)
+                if new_word not in past_words:
+                    print('played from new block')
+                    past_words=past_words+','+new_word
+                    response=new_word
+                    translation= ''
+                    played=True
+                else:
+                    for item in arr:
+                        if word[-1:] == item[1][0] and item[1] not in past_words and item[1][-1:] != 'ん' and item[1][-1:] != 'い' and 'to' not in item[2]:
+                            past_words=past_words+','+item[1]
+                            response=item[1]
+                            translation = item[2]
+                            played=True
+                            break
                 if played==False:
                     flash('Failed To Find a word to play! Well Done!')
                 else:
-                    flash('Word Played ' + response)
+                    flash('Word Played ' + response +'- (' +translation+ ')')
                 # Save the comment here.
                 form.past_words.data = past_words
 
@@ -64,6 +78,27 @@ class ReusableForm(Form):
         else:
             flash('A word must be played. It must be written in hirgana.')
         return render_template('game.html', form=form)
+
+def find_playable_endings(start_kana,arr):
+    playable_kana_ends= []
+    for item  in arr:
+        if item[1][0]==start_kana and item[1][0] not in playable_kana_ends:
+            playable_kana_ends += item[1][0]
+    return playable_kana_ends
+
+def find_most_n_word_ending(playable_kana_ends,arr,past_words):
+    kvp = {}
+    for end_kana in playable_kana_ends:
+        for item in arr:
+            if item[1][0]==end_kana:
+                kvp[item[1]]=0
+                for x in arr:
+                    if x[1][-1:] == 'ん' and item[1][-1:]==x[1][0] and x[1] not in past_words:
+                        kvp[item[1]]+=1
+    max_word = max(kvp.items(), key=operator.itemgetter(1))[0]
+    print("Max is : " + max_word)
+    return max_word
+
 
 def load_jlpt_dataframe():
     df = pd.read_csv('./assets/jlpt_words.csv',encoding='utf_8')
