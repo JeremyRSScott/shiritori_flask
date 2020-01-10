@@ -1,19 +1,44 @@
-<title>Reusable Form Demo</title>
+<html>
+  <head>
+    <title>Shiritori Game</title>
+    <link href="{{ url_for('static', filename='styles/style.css')}}" type="text/css" rel ="stylesheet">
+    <link href="{{ url_for('static', filename='styles/global.css')}}" type="text/css" rel ="stylesheet">
+    <style>
+      li{
+        display:inline;
+      }
+      ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+      }
 
-{% with messages = get_flashed_messages(with_categories=true) %}
-{% if messages %}
-<ul>
-                    {% for message in messages %}
- 	<li>{{message[1]}}</li>
-{% endfor %}</ul>
-{% endif %}
-{% endwith %}
-<form action="" method="post" autocomplete="off">
-            {{form.csrf}}
-<div class="input text">
-                {{form.word.label}} {{form.word(autocomplete="off")}}</div>
-<div class="input text">
-                {{form.past_words.label}} {{form.past_words(readonly=true)}}</div>
-<div class="input submit">
-                <input type="submit" value="Submit"></div>
-</form>
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <h1 class="title">Shiritori Game</h1>
+    </div>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <ul class="flex block nostyle">
+      {% for message in messages %}
+     	<li>{{message[1]}}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
+    <form action="" method="post" autocomplete="off">
+                  {{form.csrf}}
+      <div class="input text">
+                  {{form.word.label}} {{form.word(autocomplete="off")}}
+      </div>
+      <div class="input text" style="display:none;">
+                  {{form.past_words.label}} {{form.past_words(readonly=true)}}
+      </div>
+      <div class="input submit">
+        <input type="submit" value="Submit">
+      </div>
+    </form>
+  </body>
+</html>

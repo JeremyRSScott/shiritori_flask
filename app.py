@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from flask import Flask, render_template, flash, request
 from wtforms import Form, TextField, TextAreaField, validators, StringField, SubmitField
 import re
@@ -6,23 +7,46 @@ import codecs
 import csv
 from googletrans import Translator
 import operator
+import os.path
 # App config.
 DEBUG = True
-app = Flask(__name__)
-app.config.from_object(__name__)
+TEMPLATE_DIR=os.path.abspath('./templates')
+STATIC_DIR=os.path.abspath('./static')
+
+app = Flask(__name__,template_folder=TEMPLATE_DIR, static_folder=STATIC_DIR)
+#app.config.from_object(__name__)
 app.config['SECRET_KEY'] = '7d441f27d441f27567d441f2b6176a'
+
+@app.route("/",methods=['GET'])
+def index():
+    return render_template('index.html')
+
+@app.route("/what-is-shiritori",methods=['GET'])
+def what():
+    return "what"
+@app.route("/about-the-theory",methods=['GET'])
+def about():
+    return "about"
+
+@app.route("/this-game",methods=['GET'])
+def this():
+    return "this-game"
+
+@app.route("/contact",methods=['GET'])
+def contact():
+    return "contact"
 
 class ReusableForm(Form):
     word = TextField('Word:', validators=[validators.required()])
     past_words =  TextField('Past Words:', validators=[])
-    @app.route("/", methods=['GET', 'POST'])
+    @app.route("/play", methods=['GET', 'POST'])
     def hello():
         form = ReusableForm(request.form)
         df = load_jlpt_dataframe()
-        df.columns=['index','name','hiragana','kanji']
-        print(df.head())
-        arr = word_array()
-        arr= format_arr(arr)
+        df.columns=['index','hiragana','romaji','kanji','name','usage']
+        #print(df.head())
+        #arr = word_array()
+        #arr=format_arr(arr)
 
         print(form.errors)
         if request.method == 'POST':
@@ -101,10 +125,10 @@ def find_most_n_word_ending(playable_kana_ends,arr,past_words):
 
 
 def load_jlpt_dataframe():
-    df = pd.read_csv('./assets/n3_csv_tanos.csv',encoding='utf_8')
+    df = pd.read_csv('./assets/jlpt_words.csv',encoding='utf_8')
     return df
 
-def special_match(strg, search=re.compile(r'[ぁ-ゟ]').search):
+def special_match(strg, search=re.compile(r'[ぁ-ゟあ]').search):
      return bool(search(strg))
 
 def format_arr(arr):
