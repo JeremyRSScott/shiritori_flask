@@ -45,28 +45,25 @@ class ReusableForm(Form):
         df = load_jlpt_dataframe()
         df.columns=['index','hiragana','romaji','kanji','name','usage']
         #print(df.head())
-        #arr = word_array()
-        #arr=format_arr(arr)
-
-        print(form.errors)
+        arr = word_array()
+        arr=format_arr(arr)
         if request.method == 'POST':
             translator=Translator()
 
-            if not (transator.translate(request.form['word'])):
+            if not (translator.translate(request.form['word'])):
                 flash('WHAT IS THIS')
             a = translator.translate(request.form['word'])
             print(a.extra_data)
             word=request.form['word']
             past_words=''
-            print(word)
         verb_endings = r'[^くすぐず]'
         hiragana_full = r'[ぁ-ゟ][^。、]'
         if form.validate() and special_match(word):
             if(valid_word_played(word,request.form['past_words'])):
                 if(request.form['past_words']==''):
-                    past_words=request.form['word']
+                    past_words="("+request.form['word']+","+parse_for_translation(a.extra_data) +")"
                 else:
-                    past_words=request.form['past_words'] + ',' + word
+                    past_words = +request.form['past_words']+","+"("+request.form['word']+","+parse_for_translation(a.extra_data) +")"
                 print(word)
                 response=''
                 played=False
@@ -78,14 +75,21 @@ class ReusableForm(Form):
                 print("NEW WORD " + new_word)
                 if new_word not in past_words:
                     print('played from new block')
-                    past_words=past_words+','+new_word
+                    a = translator.translate(new_word)
+                    trans = "";
+                    print(a.extra_data)
+                    if(parse_for_translation(a.extra_data)==None):
+                        past_words="OMG"
+                    else:
+                        past_words=past_words+','+"("+new_word+","+parse_for_translation(a.extra_data)+")"
                     response=new_word
-                    translation= ''
+                    translation= parse_for_translation(a.extra_data)
                     played=True
                 else:
                     for item in arr:
                         if word[-1:] == item[1][0] and item[1] not in past_words and item[1][-1:] != 'ん' and item[1][-1:] != 'い' and 'to' not in item[2]:
-                            past_words=past_words+','+item[1]
+                            a = translator.translate(item[1])
+                            past_words=past_words+','+"("+item[1]+","+parse_for_translation(a.extra_data)+")"
                             response=item[1]
                             translation = item[2]
                             played=True
@@ -101,7 +105,13 @@ class ReusableForm(Form):
                 flash('Invalid Word Played')
         else:
             flash('A word must be played. It must be written in hirgana.')
-        return render_template('game.html', form=form)
+        return render_template('game.html', form=form, pastwords="")
+
+def parse_for_translation(data):
+    arrs = data['translation']
+    for arr in arrs:
+        if arr[0]!=None:
+            return arr[0]
 
 def find_playable_endings(start_kana,arr):
     playable_kana_ends= []
