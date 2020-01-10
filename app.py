@@ -7,10 +7,14 @@ import codecs
 import csv
 from googletrans import Translator
 import operator
+import os.path
 # App config.
 DEBUG = True
-app = Flask(__name__)
-app.config.from_object(__name__)
+TEMPLATE_DIR=os.path.abspath('./templates')
+STATIC_DIR=os.path.abspath('./static')
+
+app = Flask(__name__,template_folder=TEMPLATE_DIR, static_folder=STATIC_DIR)
+#app.config.from_object(__name__)
 app.config['SECRET_KEY'] = '7d441f27d441f27567d441f2b6176a'
 
 class ReusableForm(Form):
