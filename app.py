@@ -20,15 +20,16 @@ class ReusableForm(Form):
         form = ReusableForm(request.form)
         df = load_jlpt_dataframe()
         df.columns=['index','name','hiragana','kanji']
-        #print(df.head())
-        #arr = word_array()
-        #arr=format_arr(arr)
+        print(df.head())
+        arr = word_array()
+        arr= format_arr(arr)
 
         print(form.errors)
         if request.method == 'POST':
             translator=Translator()
-            if not (translator.translate(request.form['word'])):
-                flash('what is this')
+
+            if not (transator.translate(request.form['word'])):
+                flash('WHAT IS THIS')
             a = translator.translate(request.form['word'])
             print(a.extra_data)
             word=request.form['word']
@@ -71,7 +72,7 @@ class ReusableForm(Form):
                     flash('Word Played ' + response +'- (' +translation+ ')')
                 # Save the comment here.
                 form.past_words.data = past_words
-
+                form.word.data=""
             else:
                 flash('Invalid Word Played')
         else:
