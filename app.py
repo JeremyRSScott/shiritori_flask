@@ -61,9 +61,9 @@ class ReusableForm(Form):
         if form.validate() and special_match(word):
             if(valid_word_played(word,request.form['past_words'])):
                 if(request.form['past_words']==''):
-                    past_words="("+request.form['word']+","+parse_for_translation(a.extra_data) +")"
+                    past_words=request.form['word']
                 else:
-                    past_words = +request.form['past_words']+","+"("+request.form['word']+","+parse_for_translation(a.extra_data) +")"
+                    past_words=request.form['past_words'] + ',' + word
                 print(word)
                 response=''
                 played=False
@@ -75,21 +75,14 @@ class ReusableForm(Form):
                 print("NEW WORD " + new_word)
                 if new_word not in past_words:
                     print('played from new block')
-                    a = translator.translate(new_word)
-                    trans = "";
-                    print(a.extra_data)
-                    if(parse_for_translation(a.extra_data)==None):
-                        past_words="OMG"
-                    else:
-                        past_words=past_words+','+"("+new_word+","+parse_for_translation(a.extra_data)+")"
+                    past_words=past_words+','+new_word
                     response=new_word
-                    translation= parse_for_translation(a.extra_data)
+                    translation= ''
                     played=True
                 else:
                     for item in arr:
                         if word[-1:] == item[1][0] and item[1] not in past_words and item[1][-1:] != 'ん' and item[1][-1:] != 'い' and 'to' not in item[2]:
-                            a = translator.translate(item[1])
-                            past_words=past_words+','+"("+item[1]+","+parse_for_translation(a.extra_data)+")"
+                            past_words=past_words+','+item[1]
                             response=item[1]
                             translation = item[2]
                             played=True

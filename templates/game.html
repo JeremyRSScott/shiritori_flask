@@ -95,24 +95,31 @@
     </div>
     <script>
       let played_words_csv = document.getElementById("past_words").value;
-      let played_words = played_words_csv.split('),(');
       html ="";
-      for(var i = played_words.length-1; i>=0; --i){
-        let word = played_words[i];
-        word = word.replace(')', ' ');
-        word = word.replace('(', ' ');
-        let inner_words = word.split(',');
-        let word_played = inner_words[0];
-        let word_meaning = inner_words[1];
+      if(played_words_csv.includes(',')){
+        let played_words = played_words_csv.split('),(');
 
-        if(i%2==0){
-          html +="<div><p>Computer Played : "+word_played+" - Meaning : "+word_meaning+"</div></p>";
-        }
-        else{
-          html += "<div><p>You Played : "+word_played+" - Meaning : "+word_meaning+"</div></p>";
-        }
 
+        for(var i = played_words.length-1; i>=0; --i){
+          let word = played_words[i];
+          word = word.replace(')', ' ');
+          word = word.replace('(', ' ');
+          let inner_words = word.split(',');
+          let word_played = inner_words[0];
+          let word_meaning = inner_words[1];
+
+          if(i%2==0){
+            html +="<div><p>Computer Played : "+word_played+" - Meaning : "+word_meaning+"</div></p>";
+          }
+          else{
+            html += "<div><p>You Played : "+word_played+" - Meaning : "+word_meaning+"</div></p>";
+          }
+
+        }
+      }else{
+        html += "New Game!";
       }
+
       document.getElementById("played_words").innerHTML=html;
 
     </script>
