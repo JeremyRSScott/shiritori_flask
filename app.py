@@ -62,7 +62,7 @@ class ReusableForm(Form):
         form.word_data.data=word_data
         verb_endings = r'[^くすぐず]'
         hiragana_full = r'[ぁ-ゟ][^。、]'
-        if form.validate() and (special_match(word) or parse_for_translation_exists(a.extra_data)):
+        if form.validate() and (special_match(word)):
             print("hello")
             if(valid_word_played(word,request.form['past_words'])):
                 if(request.form['past_words']==''):
