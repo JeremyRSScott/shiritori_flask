@@ -49,6 +49,9 @@ class ReusableForm(Form):
         #print(df.head())
         arr = word_array()
         arr=format_arr(arr)
+        word=""
+
+
         if request.method == 'POST':
             translator=Translator()
 
@@ -62,7 +65,7 @@ class ReusableForm(Form):
 
         verb_endings = r'[^くすぐず]'
         hiragana_full = r'[ぁ-ゟ][^。、]'
-        if form.validate() and special_match(word):
+        if form.validate() and special_match(word) and word[-1:]!='ん' and word!="":
             if(valid_word_played(word,request.form['past_words'])):
                 if(request.form['past_words']==''):
                     past_words=request.form['word']
@@ -109,7 +112,11 @@ class ReusableForm(Form):
                 word_data+=form.word_data.data+",Please ensure your word is hiragana and not a repeated word. Please try again."
                 form.word_data.data=word_data
         else:
-            word_data+=form.word_data.data+",Please ensure your word is hiragana and not a repeated word."
+            if(word[-1:]=='ん'):
+                a=translator.translate(word)
+                word_data+=form.word_data.data+","+word+"-"+parse_for_translation(a.extra_data)+",Game over! You played a word ending in 'ん'. Thanks for playing!"
+            else:
+                word_data+=form.word_data.data+",Please ensure your word is hiragana and not a repeated word."
             form.word_data.data=word_data
         form.word_data.data=word_data
         return render_template('game.html', form=form, pastwords="")

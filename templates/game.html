@@ -199,6 +199,7 @@
           <div class="header flex">
              <div class="header-item">
                <a onclick="RestartGame()" >< Restart</a>
+               <p>Streak: <span id="streak"></span</p>
              </div>
              <div class="header-item centre">
                <div class="profile-photo">
@@ -272,18 +273,23 @@
 
 
           }
+          document.getElementById('streak').innerHTML=Math.floor((x-1)/2);
         }else{
           html += "<div class=\"card\"><div class=\"card container computer\"><p class=\"card-meaning\">"+played_words_csv+"</p></div></div>";
         }
 
         document.getElementById("msgs").innerHTML=document.getElementById("msgs").innerHTML + html;
+        document.getElementById("word").focus();
       }
       Render();
+      Scrollz();
     </script>
     <script>
-        var element = document.getElementById("msg-container");
-        element.scrollTop = element.scrollHeight;
-
+        function Scrollz(){
+          var element = document.getElementById("msg-container");
+          element.scrollTop = element.scrollHeight;
+        }
+      Scrollz();
     </script>
     <script>
       document.getElementById('word').placeholder="Enter your word here...";
@@ -296,7 +302,7 @@
           document.getElementById('word').value="";
           document.getElementById('past_words').value="";
 
-      
+          Render();
         }
 
       }
