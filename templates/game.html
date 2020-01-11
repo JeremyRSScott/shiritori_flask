@@ -43,58 +43,69 @@
     .flex{
       display:flex;
     }
+    .card{
+      font-size:22px;
+
+    }
+    .card.user{
+      border:1px solid green;
+    }
+
+    .game-form-container{
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      top:0;
+      text-align: center;
+
+    }
   </style>
 </head>
 
 <body>
-    <div class="centred-container">
-      <div class="front-page-content">
-        <h1 class="title">
-          Shiritori Solver
-        </h1>
-        <span>
-          A delve into a Japanese word game.<br> Game, and website designed and developed by Jeremy Scott.
-        </span>
-        <div class="navbar">
-          <ul class="navbar-menu">
-            <li class="navbar-menu-item"><h2><a class="navbar-link" href="/">Home</a></h2></li>
-            <li class="navbar-menu-item"><h2><a class="navbar-link" href="/what-is-shiritori">What is Shiritori?</a></h2></li>
-            <li class="navbar-menu-item"><h2><a class="navbar-link" href="/about-the-theory">About Shiritori Theory</a></h2></li>
-            <li class="navbar-menu-item"><h2><a class="navbar-link" href="/this-game">How does this version work?</a></h2></li>
-            <li class="navbar-menu-item"><h2><a class="navbar-link" href="/contact">Contact Us</a></h2></li>
-          </ul>
-        </div>
-      </div>
+    <div>
+      <h1>
+        I'm a header
+      </h2>
+      <ul>
+        <li><a href='/'>Home</a></li>
+      </ul>
     </div>
-    {% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-    <ul class="flex block nostyle">
-      {% for message in messages %}
-     	<li>{{message[1]}}</li>
-      {% endfor %}
-    </ul>
-    {% endif %}
-    {% endwith %}
-    <form action="" method="post" autocomplete="off">
-                  {{form.csrf}}
-      <div class="flex">
-        <div class="input text">
-                    {{form.word.label}} {{form.word(autocomplete="off")}}
-        </div>
-        <div class="input text" style="display:none;">
-                    {{form.past_words.label}} {{form.past_words(readonly=true)}}
-        </div>
+    <div class="game-form-container">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+      <ul class="flex block nostyle">
+        {% for message in messages %}
+       	<li>{{message[1]}}</li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+      {% endwith %}
+      <form action="" method="post" autocomplete="off">
+                    {{form.csrf}}
+        <div class="flex">
+          <div class="input text">
+                      {{form.word.label}} {{form.word(autocomplete="off")}}
+          </div>
+          <div class="input text" style="display:none;">
+                      {{form.past_words.label}} {{form.past_words(readonly=true)}}
+          </div>
+          <div class="input text" style="display:none;">
+              {{form.word_data.label}} {{form.word_data(readonly=true)}}
+          </div>
 
-        <div class="input submit">
-          <input type="submit" value="Submit">
+          <div class="input submit">
+            <input type="submit" value="Submit">
+          </div>
         </div>
+      </form>
+      <div id="played_words">
+
       </div>
-    </form>
-    <div id="played_words">
-
     </div>
     <script>
-      let played_words_csv = document.getElementById("past_words").value;
+      let played_words_csv = document.getElementById("word_data").value;
       html ="";
       if(played_words_csv.includes(',')){
         let played_words = played_words_csv.split('),(');
@@ -109,10 +120,10 @@
           let word_meaning = inner_words[1];
 
           if(i%2==0){
-            html +="<div><p>Computer Played : "+word_played+" - Meaning : "+word_meaning+"</div></p>";
+            html +="<div class=\"card user\"><p class=\"card-text\">You Played : "+word_played+" </p><p class=\"card-text\"> Meaning : "+word_meaning+"</div></p>";
           }
           else{
-            html += "<div><p>You Played : "+word_played+" - Meaning : "+word_meaning+"</div></p>";
+            html += "<div class=\"card computer\"><p class=\"card-text\">Computer Played : "+word_played+" </p><p class=\"card-text\"> Meaning : "+word_meaning+"</div></p>";
           }
 
         }

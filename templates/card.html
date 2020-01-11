@@ -1,0 +1,219 @@
+<html>
+  <head>
+    <style>
+      .flex{
+        display:flex;
+      }
+      .game-form-container{
+        width:300px;
+        height:609px;
+        background-image:url('http://www.adobewordpress.com/tasarim/images/iphone6.png');
+        background-size:100% 100%;
+        margin:0 auto;
+        position:relative;
+      }
+      .game-form-inner,form{
+        position:absolute;
+        top:12.3%;
+        right:7%;
+        left:7%;
+        bottom:12%;
+
+      }
+      .messages{
+        overflow-x:hidden;
+        overflow-y:auto;
+        height:80%;
+        border-bottom:1px solid #E5E5EA;
+      }
+      .messages *{
+        word-wrap:break-word;
+        transition:all .5s;
+
+      }
+      .card{
+        display:block;
+        width:98%;
+        padding:0.5;
+        margin:0;
+        position:relative;
+      }
+      .card.container{
+        max-width:90%;
+      }
+      .card.container.computer{
+        background:#E5E5EA;
+        color:black;
+        float:left;
+        clear:both;
+
+      }
+      .card.container.computer::before{
+        content:"";
+        position:absolute;
+        z-index:2;
+        bottom:-2px;
+        left:-7px;
+        height:19px;
+        border-left:20px solid #E5E5EA;
+        border-bottom-right-radius:16px 14px;
+        transform:translate(0,-2px);
+
+      }
+      .card.container.computer::after{
+        content:"";
+        position:absolute;
+        z-index:3;
+        bottom:-2px;
+        left:4px;
+        width:26px;
+        height:20px;
+        background:white;
+        border-bottom-right-radius:10px;
+        transform:translate(-30px,-2px);
+      }
+      .card.container.user{
+        background:#00e34d;
+        color:white;
+        float:right;
+        clear:both;
+
+      }
+      .card.container.user::before{
+        content:"";
+        position:absolute;
+        z-index:1;
+        bottom:-2px;
+        right:-8px;
+        height:19px;
+        border-right:20px solid #00e34d;
+        border-bottom-left-radius: 16px 14px;
+        transform:translate(0,-2px);
+
+      }
+      .card.container.user::after{
+        content:"";
+        position:absolute;
+        z-index:1;
+        bottom:-2px;
+        right:-42px;
+        width:12px;
+        height:20px;
+        background:white;
+        border-bottom-left-radius:10px;
+        transform: translate(-30px,-2px);
+
+      }
+
+
+      p{
+        margin:0;
+      }
+      .computer,.user{
+        display:block;
+        width:75%;
+        padding:0.5%;
+        border-radius:25px;
+        font-size:12px;
+        margin-bottom:20px;
+        position:relative;
+        padding:10px 20px;
+
+      }
+
+      .card:hover{
+        box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+      }
+      .input-container{
+        width:73%;
+        float:left;
+      }
+      input[type="submit"]{
+        width:23%;
+        float:right;
+        text-align:right;
+        background:transparent;
+        color:#00E34D;
+
+      }
+      input{
+        border:0;
+        padding:0 15px;
+        height:10%;
+        outline:0;
+      }
+      .header{
+        overflow:hidden;
+        padding:2% 3%;
+        height:10%;
+        border-bottom:1px solid #E5E5EA;
+
+      }
+      .header-item{
+        width:33%;
+      }
+      .header-item.right{
+        text-align:right;
+      }
+      .header-item.centre{
+        text-align:center;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="game-form-container">
+
+        <form class="game-form-inner" action="" method="post" autocomplete="off">
+          <div class="header flex">
+             <div class="header-item">
+               Restart
+             </div>
+             <div class="header-item centre">
+                Shiritori Solver
+             </div>
+             <div class="header-item right">
+               Help
+             </div>
+
+          </div>
+          <div class="messages" >
+          <div class="">
+
+            <div class="input text" style="display:none;">
+                        <label for="past_words">Past Words:</label> <input id="past_words"  name="past_words" readonly="" type="text" value="かぞく,くらし">
+            </div>
+            <div class="input text" style="display:none;">
+                <label for="word_data">Word Data:</label> <input id="word_data" name="word_data" readonly="" type="text" value="(かぞく,Family),(くらし,Life)">
+            </div>
+
+          </div>
+
+
+
+
+
+            <div class="card ">
+              <div class="card container computer">
+                <p class="card-meaning">Hi, type any japanese word in Hiragana to get started!</p>
+              </div>
+            </div>
+
+            <div class="card ">
+              <div class="card container user">
+                <p class="card-played">User Played : くらし Meaning : Life </p>
+              </div>
+            </div>
+
+            </div>
+            <div class="input text">
+                        <div class="input-container"> <input placeholder="Type your word here" autocomplete="off" id="word" name="word" required="" type="text" value=""></div>
+                        <div class="input submit">
+                          <input type="submit" value="Submit">
+                        </div>
+            </div>
+
+            </form>
+        </div>
+  <body>
+
+</html>

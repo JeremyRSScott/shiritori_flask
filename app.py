@@ -39,6 +39,8 @@ def contact():
 class ReusableForm(Form):
     word = TextField('Word:', validators=[validators.required()])
     past_words =  TextField('Past Words:', validators=[])
+    word_data = TextField('Word Data:',validators=[])
+
     @app.route("/play", methods=['GET', 'POST'])
     def hello():
         form = ReusableForm(request.form)
@@ -56,14 +58,17 @@ class ReusableForm(Form):
             print(a.extra_data)
             word=request.form['word']
             past_words=''
+            word_data=''
         verb_endings = r'[^くすぐず]'
         hiragana_full = r'[ぁ-ゟ][^。、]'
         if form.validate() and special_match(word):
             if(valid_word_played(word,request.form['past_words'])):
                 if(request.form['past_words']==''):
                     past_words=request.form['word']
+                    word_data = "(" + request.form['word']+","+parse_for_translation(a.extra_data)+")"
                 else:
                     past_words=request.form['past_words'] + ',' + word
+                    word_data =  request.form['word_data'] + ',(' + word +','+parse_for_translation(a.extra_data) +')'
                 print(word)
                 response=''
                 played=False
@@ -77,12 +82,15 @@ class ReusableForm(Form):
                     print('played from new block')
                     past_words=past_words+','+new_word
                     response=new_word
-                    translation= ''
+                    a = translator.translate(new_word)
+                    translation= parse_for_translation(a.extra_data)
+                    word_data = word_data + ',(' + new_word+','+ translation + ')'
                     played=True
                 else:
                     for item in arr:
                         if word[-1:] == item[1][0] and item[1] not in past_words and item[1][-1:] != 'ん' and item[1][-1:] != 'い' and 'to' not in item[2]:
-                            past_words=past_words+','+item[1]
+                            past_words = past_words+','+item[1]
+                            word_data = word_data + ',('+item[1]+','+item[2]+'),'
                             response=item[1]
                             translation = item[2]
                             played=True
@@ -90,10 +98,11 @@ class ReusableForm(Form):
                 if played==False:
                     flash('Failed To Find a word to play! Well Done!')
                 else:
-                    flash('Word Played ' + response +'- (' +translation+ ')')
+                    flash('')
                 # Save the comment here.
                 form.past_words.data = past_words
                 form.word.data=""
+                form.word_data.data=word_data
             else:
                 flash('Invalid Word Played')
         else:
