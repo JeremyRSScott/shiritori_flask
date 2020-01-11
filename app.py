@@ -105,10 +105,10 @@ class ReusableForm(Form):
                 form.word.data=""
                 form.word_data.data=word_data
             else:
-                word_data+=form.word_data.data+",The word you have chosen is invalid. Please ensure it is hiragana and not a repeated word. Please try again."
+                word_data+=form.word_data.data+",Please ensure your word is hiragana and not a repeated word. Please try again."
                 form.word_data.data=word_data
         else:
-            word_data+=form.word_data.data+",The word you have chosen is invalid. Please ensure it is hiragana and not a repeated word. Please try again."
+            word_data+=form.word_data.data+",Please ensure your word is hiragana and not a repeated word."
             form.word_data.data=word_data
         form.word_data.data=word_data
         return render_template('game.html', form=form, pastwords="")
