@@ -51,7 +51,7 @@ class ReusableForm(Form):
         arr=format_arr(arr)
         if request.method == 'POST':
             translator=Translator()
-
+            print(request.form['word'])
             if not (translator.translate(request.form['word'])):
                 flash('WHAT IS THIS')
             a = translator.translate(request.form['word'])
@@ -62,7 +62,8 @@ class ReusableForm(Form):
         form.word_data.data=word_data
         verb_endings = r'[^くすぐず]'
         hiragana_full = r'[ぁ-ゟ][^。、]'
-        if form.validate() and special_match(word):
+        if form.validate() and (special_match(word) or parse_for_translation_exists(a.extra_data)):
+            print("hello")
             if(valid_word_played(word,request.form['past_words'])):
                 if(request.form['past_words']==''):
                     past_words=request.form['word']
@@ -111,6 +112,12 @@ class ReusableForm(Form):
             word_data+=",The word you have chosen is invalid. Please ensure it is hiragana and not a repeated word. Please try again."
             form.word_data.data=word_data
         return render_template('game.html', form=form, pastwords="")
+
+def parse_for_translation_exists(data):
+    arrs = data['translation']
+    for arr in arrs:
+        if arr[0]!=None:
+            return arr[0]
 
 def parse_for_translation(data):
     arrs = data['translation']
