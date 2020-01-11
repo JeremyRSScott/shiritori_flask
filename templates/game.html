@@ -245,6 +245,7 @@
         </div>
 
     <script>
+      let original_html=document.getElementById("msgs").innerHTML=document.getElementById("msgs").innerHTML;
       function Render(){
       let played_words_csv = document.getElementById("word_data").value;
       html ="";
@@ -301,8 +302,6 @@
           document.getElementById('word_data').value="New game started! "+messages.split(',')[0];
           document.getElementById('word').value="";
           document.getElementById('past_words').value="";
-
-          Render();
         }
 
       }

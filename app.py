@@ -61,7 +61,7 @@ class ReusableForm(Form):
             print(a.extra_data)
             word=request.form['word']
             past_words=''
-        word_data='Welcome! Please enter any valid Japanese word in Hiragana to get started.'
+        word_data='Welcome to the Shiritori Game! Please enter any valid Japanese word in Hiragana to get started.'
 
         verb_endings = r'[^くすぐず]'
         hiragana_full = r'[ぁ-ゟ][^。、]'
@@ -82,23 +82,15 @@ class ReusableForm(Form):
                 except:
                     new_word = request.form['word']
                 print("NEW WORD " + new_word)
-                if new_word not in past_words:
-                    print('played from new block')
-                    past_words=past_words+','+new_word
-                    response=new_word
-                    a = translator.translate(new_word)
-                    translation= parse_for_translation(a.extra_data)
-                    word_data = word_data + ',' + new_word+'-'+ translation
-                    played=True
-                else:
-                    for item in arr:
-                        if word[-1:] == item[1][0] and item[1] not in past_words and item[1][-1:] != 'ん' and item[1][-1:] != 'い' and 'to' not in item[2]:
-                            past_words = past_words+','+item[1]
-                            word_data = word_data + ','+item[1]+'-'+item[2]
-                            response=item[1]
-                            translation = item[2]
-                            played=True
-                            break
+        
+                for item in arr:
+                    if word[-1:] == item[1][0] and item[1] not in past_words and item[1][-1:] != 'ん' and item[1][-1:] != 'い' and 'to' not in item[2]:
+                        past_words = past_words+','+item[1]
+                        word_data = word_data + ','+item[1]+'-'+item[2]
+                        response=item[1]
+                        translation = item[2]
+                        played=True
+                        break
                 if played==False:
                     a=translator.translate(word)
                     word_data=form.word_data.data+','+word+'-'+parse_for_translation(a.extra_data)+',Failed To Find a word to play! Well Done! You Win!'
@@ -109,14 +101,14 @@ class ReusableForm(Form):
                 form.word.data=""
                 form.word_data.data=word_data
             else:
-                word_data+=form.word_data.data+",Please ensure your word is hiragana and not a repeated word. Please try again."
+                word_data+=form.word_data.data+",The rules of Shiritori are as follows: 1. Words must start with the end kana of the last word played. 2. Words cannot end with 'ん'. 3. Words cannot be repeated. 4. For this version we also do not accept words that end with little kanas(EG.じてんしゃ). Please note all words must be valid Japanese words that are written in hiragana only. Please try again."
                 form.word_data.data=word_data
         else:
             if(word[-1:]=='ん'):
                 a=translator.translate(word)
                 word_data+=form.word_data.data+","+word+"-"+parse_for_translation(a.extra_data)+",Game over! You played a word ending in 'ん'. Thanks for playing!"
             else:
-                word_data+=form.word_data.data+",Please ensure your word is hiragana and not a repeated word."
+                word_data+=form.word_data.data+",The rules of Shiritori are as follows: 1. Words must start with the end kana of the last word played. 2. Words cannot end with 'ん'. 3. Words cannot be repeated. 4. For this version we also do not accept words that end with little kanas(EG.じてんしゃ). Please note all words must be valid Japanese words that are written in hiragana only. Good Luck!"
             form.word_data.data=word_data
         form.word_data.data=word_data
         return render_template('game.html', form=form, pastwords="")
