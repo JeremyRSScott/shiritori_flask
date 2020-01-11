@@ -126,6 +126,9 @@
         font-family:monospace;
 
       }
+      div,p{
+        font-family:monospace;
+      }
       html{
         background-color:#000;
       }
@@ -184,6 +187,8 @@
       }
 
     </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
   </head>
   <body>
     <div class="cont">
@@ -193,7 +198,7 @@
           {{form.csrf}}
           <div class="header flex">
              <div class="header-item">
-               Restart
+               <a onclick="RestartGame()" >< Restart</a>
              </div>
              <div class="header-item centre">
                <div class="profile-photo">
@@ -202,10 +207,10 @@
 
                 </svg>
                 </div>
-                <p style="font-size: 10px;" >Computer</p>
+                <p style="font-size: 10px;" ><b>Computer</b></p>
              </div>
              <div class="header-item right">
-               Help
+               <a onclick="alert('Help')" style="text-decoration:underline;">Help</a>
              </div>
 
           </div>
@@ -239,40 +244,62 @@
         </div>
 
     <script>
+      function Render(){
       let played_words_csv = document.getElementById("word_data").value;
       html ="";
       if(played_words_csv.includes(',')){
-        let played_words=played_words_csv.split(',');
-        html+="<div class=\"card\"><div class=\"card container computer\"><p class=\"card-meaning\">"+played_words[0]+"</p></div></div>";
-        for(var i = 1; i<played_words.length; ++i){
-          if(played_words[i].includes('-')){
-            let split_str=played_words[i].split('-');
-            let word_played=split_str[0];
-            let meaning = split_str[1];
+          alert("ello");
+          let played_words=played_words_csv.split(',');
+          html+="<div class=\"card\"><div class=\"card container computer\"><p class=\"card-meaning\">"+played_words[0]+"</p></div></div>";
+          for(var i = 1; i<played_words.length; ++i){
+            if(played_words[i].includes('-')){
+              let split_str=played_words[i].split('-');
+              let word_played=split_str[0];
+              let meaning = split_str[1];
 
-            if(i%2!=0){//user block
-                html+="<div class=\"card\"><div class=\"card container user\"><p class=\"card-meaning\">User played word: "+word_played+", which means: "+meaning+"</p></div></div>";
-            }else{//computer block
-                  html+="<div class=\"card\"><div class=\"card container computer\"><p class=\"card-meaning\">Computer played word: "+word_played+", which means: "+meaning+"</p></div></div>";
+              if(i%2!=0){//user block
+                  html+="<div class=\"card\"><div class=\"card container user\"><p class=\"card-meaning\">User played word: "+word_played+", which means: "+meaning+"</p></div></div>";
+              }else{//computer block
+                    html+="<div class=\"card\"><div class=\"card container computer\"><p class=\"card-meaning\">Computer played word: "+word_played+", which means: "+meaning+"</p></div></div>";
+              }
             }
-          }
-          else{
-            html+="<div class=\"card\"><div class=\"card container computer\"><p class=\"card-meaning\">"+played_words[i]+"</p></div></div>";
-          }
+            else{
+              html+="<div class=\"card\"><div class=\"card container computer\"><p class=\"card-meaning\">"+played_words[i]+"</p></div></div>";
+            }
 
 
+          }
+        }else{
+          html += "<div class=\"card\"><div class=\"card container computer\"><p class=\"card-meaning\">"+played_words_csv+"</p></div></div>";
         }
-      }else{
-        html += "<div class=\"card\"><div class=\"card container computer\"><p class=\"card-meaning\">"+played_words_csv+"</p></div></div>";
+
+        document.getElementById("msgs").innerHTML=document.getElementById("msgs").innerHTML + html;
       }
-
-      document.getElementById("msgs").innerHTML=document.getElementById("msgs").innerHTML + html;
-
+      Render();
     </script>
     <script>
         var element = document.getElementById("msg-container");
         element.scrollTop = element.scrollHeight;
 
+    </script>
+    <script>
+      document.getElementById('word').placeholder="Enter your word here...";
+      function RestartGame(){
+        let messages = document.getElementById('word_data').value;
+        let words="";
+        if(messages.includes(',')){
+
+          document.getElementById('word_data').value="New game started! "+messages.split(',')[0];
+          document.getElementById('word').value='';
+          document.getElementById('past_words').value='';
+          alert(messages.split(',')[0]);
+          Render();
+        }
+
+      }
+      function Help(){
+
+      }
     </script>
   </body>
 </html>
