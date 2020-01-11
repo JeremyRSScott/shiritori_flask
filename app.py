@@ -66,7 +66,7 @@ class ReusableForm(Form):
             if(valid_word_played(word,request.form['past_words'])):
                 if(request.form['past_words']==''):
                     past_words=request.form['word']
-                    word_data = word_data + "," + request.form['word']+"-"+parse_for_translation(a.extra_data)
+                    word_data = request.form['word_data'] + "," + request.form['word']+"-"+parse_for_translation(a.extra_data)
                 else:
                     past_words=request.form['past_words'] + ',' + word
                     word_data =  request.form['word_data'] + ',' + word +'-'+parse_for_translation(a.extra_data)
@@ -97,7 +97,8 @@ class ReusableForm(Form):
                             played=True
                             break
                 if played==False:
-                    flash('Failed To Find a word to play! Well Done!')
+                    a=translator.translate(word)
+                    word_data=form.word_data.data+','+word+'-'+parse_for_translation(a.extra_data)+',Failed To Find a word to play! Well Done! You Win!'
                 else:
                     flash('')
                 # Save the comment here.
