@@ -1,137 +1,277 @@
 <html>
-<head>
-  <style>
-    html{
-      width:100%;
-      height:100%;
-      display:flex;
-    }
-    body{
-      margin:0;
-      width:100%;
-      height:100%;
-    }
-    .centred-container{
-      margin-right:20px;
-    }
+  <head>
+    <style>
+      .html{
 
-    .front-page-content{
-      float:right;
-      color:#000;
-    }
-    .front-page-content a{
-      color:black;
-      text-decoration: none;
-    }
-    .front-page-content a:hover{
-      color:black;
-      text-decoration: underline;
+        line-height:26
+      }
+      .flex{
+        display:flex;
+      }
+      .game-form-container{
+        width:300px;
+        height:609px;
+        background-image:url('http://www.adobewordpress.com/tasarim/images/iphone6.png');
+        background-size:100% 100%;
+        margin:0 auto;
+        position:relative;
+        top:180;
+      }
+      .game-form-inner,form{
+        position:absolute;
+        top:12.3%;
+        right:7%;
+        left:7%;
+        bottom:12%;
 
-    }
-    ul.navbar-menu{
-      padding:0;
-      margin:0;
-    }
-    .title{
-        font-size:52px;
-        text-decoration:underline;
-    }
-    ul li{
-      list-style-type:none;
-      padding-top:10px;
-    }
-    .flex{
-      display:flex;
-    }
-    .card{
-      font-size:22px;
+      }
+      .messages{
+        overflow-x:hidden;
+        overflow-y:auto;
+        height:80%;
+        border-bottom:1px solid #E5E5EA;
+      }
+      .messages *{
+        word-wrap:break-word;
+        transition:all .5s;
 
-    }
-    .card.user{
-      border:1px solid green;
-    }
+      }
+      .card{
+        display:block;
+        width:98%;
+        padding:0.5;
+        margin:0;
+        position:relative;
+      }
+      .card.container{
+        max-width:90%;
+      }
+      .card.container.computer{
+        background:#E5E5EA;
+        color:black;
+        float:left;
+        clear:both;
 
-    .game-form-container{
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      top:0;
-      text-align: center;
+      }
+      .card.container.computer::before{
+        content:"";
+        position:absolute;
+        z-index:2;
+        bottom:-2px;
+        left:-7px;
+        height:19px;
+        border-left:20px solid #E5E5EA;
+        border-bottom-right-radius:16px 14px;
+        transform:translate(0,-2px);
 
-    }
-  </style>
-</head>
+      }
+      .card.container.computer::after{
+        content:"";
+        position:absolute;
+        z-index:3;
+        bottom:-2px;
+        left:4px;
+        width:26px;
+        height:20px;
+        background:white;
+        border-bottom-right-radius:10px;
+        transform:translate(-30px,-2px);
+      }
+      .card.container.user{
+        background:#00e34d;
+        color:white;
+        float:right;
+        clear:both;
 
-<body>
-    <div>
-      <h1>
-        I'm a header
-      </h2>
-      <ul>
-        <li><a href='/'>Home</a></li>
-      </ul>
-    </div>
+      }
+      .card.container.user::before{
+        content:"";
+        position:absolute;
+        z-index:1;
+        bottom:-2px;
+        right:-8px;
+        height:19px;
+        border-right:20px solid #00e34d;
+        border-bottom-left-radius: 16px 14px;
+        transform:translate(0,-2px);
+
+      }
+      .card.container.user::after{
+        content:"";
+        position:absolute;
+        z-index:1;
+        bottom:-2px;
+        right:-42px;
+        width:12px;
+        height:20px;
+        background:white;
+        border-bottom-left-radius:10px;
+        transform: translate(-30px,-2px);
+
+      }
+
+
+      p{
+        margin:0;
+      }
+      .computer,.user{
+        display:block;
+        width:75%;
+        padding:0.5%;
+        border-radius:25px;
+        font-size:12px;
+        margin-bottom:20px;
+        position:relative;
+        padding:10px 20px;
+        font-family:monospace;
+
+      }
+      html{
+        background-color:#000;
+      }
+      .card:hover{
+        box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+      }
+      .input-container{
+        width:73%;
+        float:left;
+      }
+      input[type="submit"]{
+        width:23%;
+        float:right;
+        text-align:right;
+        background:transparent;
+        color:#00E34D;
+
+      }
+      input{
+        border:0;
+        padding:0 15px;
+        height:10%;
+        outline:0;
+      }
+      .header{
+        overflow:hidden;
+        padding:2% 3%;
+        height:10%;
+        border-bottom:1px solid #E5E5EA;
+
+      }
+      .header-item{
+        width:33%;
+        height:95%;
+        font-size:14px;
+      }
+      .header-item.right{
+        text-align:right;
+      }
+      .header-item.centre{
+        text-align:center;
+      }
+      .profile-photo{
+        width:100%;
+        height:90%;
+
+      }
+      svg{
+        width:50%;
+        height:100%;
+        display:block;
+        margin:auto;
+      }
+      .messages-inner{
+        margin-top:2px;
+      }
+
+    </style>
+  </head>
+  <body>
+    <div class="cont">
     <div class="game-form-container">
-      {% with messages = get_flashed_messages(with_categories=true) %}
-      {% if messages %}
-      <ul class="flex block nostyle">
-        {% for message in messages %}
-       	<li>{{message[1]}}</li>
-        {% endfor %}
-      </ul>
-      {% endif %}
-      {% endwith %}
-      <form action="" method="post" autocomplete="off">
-                    {{form.csrf}}
-        <div class="flex">
-          <div class="input text">
-                      {{form.word.label}} {{form.word(autocomplete="off")}}
-          </div>
-          <div class="input text" style="display:none;">
-                      {{form.past_words.label}} {{form.past_words(readonly=true)}}
-          </div>
-          <div class="input text" style="display:none;">
-              {{form.word_data.label}} {{form.word_data(readonly=true)}}
-          </div>
 
-          <div class="input submit">
-            <input type="submit" value="Submit">
+        <form class="game-form-inner" action="" method="post" autocomplete="off">
+          {{form.csrf}}
+          <div class="header flex">
+             <div class="header-item">
+               Restart
+             </div>
+             <div class="header-item centre">
+               <div class="profile-photo">
+                 <svg  xmlns="http://www.w3.org/2000/svg">
+                   <circle cx="20" cy="20" r="20" fill="#E5E5EA" />
+
+                </svg>
+                </div>
+                <p style="font-size: 10px;" >Computer</p>
+             </div>
+             <div class="header-item right">
+               Help
+             </div>
+
           </div>
+          <div class="messages" id="msg-container" >
+            <div class="messages-inner" id="msgs">
+              <div class="">
+
+                <div class="input text" style="display:none;">
+                            {{form.past_words(readonly=true)}}
+                </div>
+                <div class="input text" style="display:none;">
+                  {{form.word_data.label}} {{form.word_data(readonly=true)}}
+                </div>
+
+              </div>
+
+
+
+
+              </div>
+            </div>
+            <div class="input text">
+                        <div class="input-container">       {{form.word(autocomplete="off")}}</div>
+                        <div class="input submit">
+                          <input type="submit" value="Submit">
+                        </div>
+            </div>
+
+            </form>
         </div>
-      </form>
-      <div id="played_words">
+        </div>
 
-      </div>
-    </div>
     <script>
       let played_words_csv = document.getElementById("word_data").value;
       html ="";
       if(played_words_csv.includes(',')){
-        let played_words = played_words_csv.split('),(');
+        let played_words=played_words_csv.split(',');
+        html+="<div class=\"card\"><div class=\"card container computer\"><p class=\"card-meaning\">"+played_words[0]+"</p></div></div>";
+        for(var i = 1; i<played_words.length; ++i){
+          if(played_words[i].includes('-')){
+            let split_str=played_words[i].split('-');
+            let word_played=split_str[0];
+            let meaning = split_str[1];
 
-
-        for(var i = played_words.length-1; i>=0; --i){
-          let word = played_words[i];
-          word = word.replace(')', ' ');
-          word = word.replace('(', ' ');
-          let inner_words = word.split(',');
-          let word_played = inner_words[0];
-          let word_meaning = inner_words[1];
-
-          if(i%2==0){
-            html +="<div class=\"card user\"><p class=\"card-text\">You Played : "+word_played+" </p><p class=\"card-text\"> Meaning : "+word_meaning+"</div></p>";
+            if(i%2!=0){//user block
+                html+="<div class=\"card\"><div class=\"card container user\"><p class=\"card-meaning\">User played word: "+word_played+", which means: "+meaning+"</p></div></div>";
+            }else{//computer block
+                  html+="<div class=\"card\"><div class=\"card container computer\"><p class=\"card-meaning\">Computer played word: "+word_played+", which means: "+meaning+"</p></div></div>";
+            }
           }
           else{
-            html += "<div class=\"card computer\"><p class=\"card-text\">Computer Played : "+word_played+" </p><p class=\"card-text\"> Meaning : "+word_meaning+"</div></p>";
+            html+="<div class=\"card\"><div class=\"card container computer\"><p class=\"card-meaning\">"+played_words[i]+"</p></div></div>";
           }
+
 
         }
       }else{
-        html += "New Game!";
+        html += "<div class=\"card\"><div class=\"card container computer\"><p class=\"card-meaning\">"+played_words_csv+"</p></div></div>";
       }
 
-      document.getElementById("played_words").innerHTML=html;
+      document.getElementById("msgs").innerHTML=document.getElementById("msgs").innerHTML + html;
+
+    </script>
+    <script>
+        var element = document.getElementById("msg-container");
+        element.scrollTop = element.scrollHeight;
 
     </script>
   </body>

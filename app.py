@@ -58,17 +58,18 @@ class ReusableForm(Form):
             print(a.extra_data)
             word=request.form['word']
             past_words=''
-            word_data=''
+        word_data='Welcome! Please enter any valid Japanese word in Hiragana to get started.'
+        form.word_data.data=word_data
         verb_endings = r'[^くすぐず]'
         hiragana_full = r'[ぁ-ゟ][^。、]'
         if form.validate() and special_match(word):
             if(valid_word_played(word,request.form['past_words'])):
                 if(request.form['past_words']==''):
                     past_words=request.form['word']
-                    word_data = "(" + request.form['word']+","+parse_for_translation(a.extra_data)+")"
+                    word_data = word_data + "," + request.form['word']+"-"+parse_for_translation(a.extra_data)
                 else:
                     past_words=request.form['past_words'] + ',' + word
-                    word_data =  request.form['word_data'] + ',(' + word +','+parse_for_translation(a.extra_data) +')'
+                    word_data =  request.form['word_data'] + ',' + word +'-'+parse_for_translation(a.extra_data)
                 print(word)
                 response=''
                 played=False
@@ -84,13 +85,13 @@ class ReusableForm(Form):
                     response=new_word
                     a = translator.translate(new_word)
                     translation= parse_for_translation(a.extra_data)
-                    word_data = word_data + ',(' + new_word+','+ translation + ')'
+                    word_data = word_data + ',' + new_word+'-'+ translation
                     played=True
                 else:
                     for item in arr:
                         if word[-1:] == item[1][0] and item[1] not in past_words and item[1][-1:] != 'ん' and item[1][-1:] != 'い' and 'to' not in item[2]:
                             past_words = past_words+','+item[1]
-                            word_data = word_data + ',('+item[1]+','+item[2]+'),'
+                            word_data = word_data + ','+item[1]+'-'+item[2]
                             response=item[1]
                             translation = item[2]
                             played=True
@@ -104,9 +105,11 @@ class ReusableForm(Form):
                 form.word.data=""
                 form.word_data.data=word_data
             else:
-                flash('Invalid Word Played')
+                word_data+=",The word you have chosen is invalid. Please ensure it is hiragana and not a repeated word. Please try again."
+                form.word_data.data=word_data
         else:
-            flash('A word must be played. It must be written in hirgana.')
+            word_data+=",The word you have chosen is invalid. Please ensure it is hiragana and not a repeated word. Please try again."
+            form.word_data.data=word_data
         return render_template('game.html', form=form, pastwords="")
 
 def parse_for_translation(data):
