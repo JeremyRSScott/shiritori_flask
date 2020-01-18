@@ -62,6 +62,7 @@ class ReusableForm(Form):
                 word_data+=form.word_data.data+",Please ensure your word is hiragana and not a repeated word. Please try again."
                 form.word_data.data=word_data
                 form.word.data=""
+                
         else:
             if(word[-1:]=='ん'):
                 a=translator.translate(word)
