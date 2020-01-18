@@ -8,6 +8,7 @@ import csv
 from googletrans import Translator
 import operator
 import os.path
+import random
 # App config.
 DEBUG = True
 TEMPLATE_DIR=os.path.abspath('./templates')
@@ -62,7 +63,7 @@ class ReusableForm(Form):
                 word_data+=form.word_data.data+",Please ensure your word is hiragana and not a repeated word. Please try again."
                 form.word_data.data=word_data
                 form.word.data=""
-                
+
         else:
             if(word[-1:]=='ん'):
                 a=translator.translate(word)
@@ -74,14 +75,17 @@ class ReusableForm(Form):
         return render_template('game.html', form=form, pastwords="")
 
 def get_new_word(past_words,start_character):
-    print(start_character)
+    print("finding a word")
     df = load_jlpt_dataframe()
     word = ''
+
     translated = ''
-    (word,translated) = n_bound_path_search(past_words,start_character,df)
-    if word == '':
+    rng = random.randrange(0,100)
+    if rng >=50:
+        (word,translated) = n_bound_path_search(past_words,start_character,df)
+    else:
         (word,translated) = repeat_attack_search(past_words,start_character,df)
-        if word == '':
+    if word == '':
             (word,translated) = get_any_word(past_words,start_character,df)
     return (word,translated)
 
@@ -96,6 +100,7 @@ def repeat_attack_search(past_words,start_character,df):
             character_count[end_char] = 1
     try:
         max_key = max(character_count.keys(), key=character_count.get())
+        print(max_key)
         for index,row in df.iterrows():
             if row['hiragana'][-1:] == max_key and row['hiragana'][0]==start_character and ','+row['hiragana']+',' not in past_words:
                 return row['hiragana'],row['translation']
@@ -112,7 +117,9 @@ def n_bound_path_search(past_words,start_character,df):
         else:
             word_n_count_path[row['hiragana']]=0
             for x,r in df.iterrows():
-                if r['hiragana'] not in past_words and r['hiragana'] != row['hiragana'] and r[0]==start_character and r[-1:]=='ん':
+                if r['hiragana'][-1:]!='ん':
+                    continue
+                if r['hiragana'] not in past_words and r['hiragana'] != row['hiragana'] and r[0]==start_character :
                     word_n_count_path[row['hiragana']]+=1
     trans = ''
     try:
@@ -127,16 +134,14 @@ def n_bound_path_search(past_words,start_character,df):
     return word,trans
 
 def get_any_word(past_words,start_character,df):
+    print("fallback")
     word = ''
     trans = ''
-
     for index, row in df.iterrows():
-        if row['hiragana'] not in past_words and row['hiragana'][0] == start_character:
+        if row['hiragana'] not in past_words and row['hiragana'][0] == start_character and row['hiragana'][-1:]!='ん':
             word = row['hiragana']
             trans = row['translation']
             break
-    print(word)
-    print(trans)
     return word,trans
 
 def parse_for_translation_exists(data):
