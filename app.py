@@ -17,101 +17,126 @@ app = Flask(__name__,template_folder=TEMPLATE_DIR, static_folder=STATIC_DIR)
 #app.config.from_object(__name__)
 app.config['SECRET_KEY'] = '7d441f27d441f27567d441f2b6176a'
 
-@app.route("/",methods=['GET'])
-def index():
-    return render_template('index.html')
-
-@app.route("/what-is-shiritori",methods=['GET'])
-def what():
-    return "what"
-@app.route("/about-the-theory",methods=['GET'])
-def about():
-    return "about"
-
-@app.route("/this-game",methods=['GET'])
-def this():
-    return "this-game"
-
-@app.route("/contact",methods=['GET'])
-def contact():
-    return "contact"
-
 class ReusableForm(Form):
     word = TextField('Word:', validators=[validators.required()])
     past_words =  TextField('Past Words:', validators=[])
     word_data = TextField('Word Data:',validators=[])
 
-    @app.route("/play", methods=['GET', 'POST'])
-    def hello():
+    @app.route("/", methods=['GET', 'POST'])
+    def Play():
         form = ReusableForm(request.form)
-        df = load_jlpt_dataframe()
-        df.columns=['index','hiragana','romaji','kanji','name','usage']
+
         #print(df.head())
         arr = word_array()
         arr=format_arr(arr)
+        word=""
+        translator=Translator()
+        translation=''
         if request.method == 'POST':
-            translator=Translator()
-            print(request.form['word'])
-            if not (translator.translate(request.form['word'])):
-                flash('WHAT IS THIS')
-            a = translator.translate(request.form['word'])
-            print(a.extra_data)
-            word=request.form['word']
-            past_words=''
+            translation = translator.translate(request.form['word'])
+            word = request.form['word']
+            past_words = ''
         word_data='Welcome! Please enter any valid Japanese word in Hiragana to get started.'
-        form.word_data.data=word_data
-        verb_endings = r'[^くすぐず]'
-        hiragana_full = r'[ぁ-ゟ][^。、]'
-        if form.validate() and (special_match(word)):
-            print("hello")
+        if form.validate() and special_match(word) and word[-1:]!='ん' and word!="":
             if(valid_word_played(word,request.form['past_words'])):
                 if(request.form['past_words']==''):
                     past_words=request.form['word']
-                    word_data = word_data + "," + request.form['word']+"-"+parse_for_translation(a.extra_data)
+                    word_data = request.form['word_data'] + "," + request.form['word']+"-"+parse_for_translation(translation.extra_data)
                 else:
                     past_words=request.form['past_words'] + ',' + word
-                    word_data =  request.form['word_data'] + ',' + word +'-'+parse_for_translation(a.extra_data)
-                print(word)
-                response=''
-                played=False
-                playable_endings=find_playable_endings(word[-1:],arr)
-                try:
-                    new_word = find_most_n_word_ending(playable_endings,arr, past_words)
-                except:
-                    new_word = request.form['word']
-                print("NEW WORD " + new_word)
-                if new_word not in past_words:
-                    print('played from new block')
-                    past_words=past_words+','+new_word
-                    response=new_word
-                    a = translator.translate(new_word)
-                    translation= parse_for_translation(a.extra_data)
-                    word_data = word_data + ',' + new_word+'-'+ translation
-                    played=True
+                    word_data =  request.form['word_data'] + ',' + word +'-'+parse_for_translation(translation.extra_data)
+                response = ''
+                trans=''
+                new_word,trans = get_new_word(past_words, word[-1:])
+                if new_word != '':
+                    #lost game
+                    past_words = past_words + ',' + new_word
+                    word_data = word_data + ',' + new_word + '-' + trans
                 else:
-                    for item in arr:
-                        if word[-1:] == item[1][0] and item[1] not in past_words and item[1][-1:] != 'ん' and item[1][-1:] != 'い' and 'to' not in item[2]:
-                            past_words = past_words+','+item[1]
-                            word_data = word_data + ','+item[1]+'-'+item[2]
-                            response=item[1]
-                            translation = item[2]
-                            played=True
-                            break
-                if played==False:
-                    flash('Failed To Find a word to play! Well Done!')
-                else:
-                    flash('')
+                    word_data = word_data +',I couldn\'t find a word to play! Well done you have won!'
                 # Save the comment here.
                 form.past_words.data = past_words
                 form.word.data=""
                 form.word_data.data=word_data
             else:
-                word_data+=",The word you have chosen is invalid. Please ensure it is hiragana and not a repeated word. Please try again."
+                word_data+=form.word_data.data+",Please ensure your word is hiragana and not a repeated word. Please try again."
                 form.word_data.data=word_data
+                form.word.data=""
         else:
-            word_data+=",The word you have chosen is invalid. Please ensure it is hiragana and not a repeated word. Please try again."
+            if(word[-1:]=='ん'):
+                a=translator.translate(word)
+                word_data+=form.word_data.data+","+word+"-"+parse_for_translation(translation.extra_data)+",Game over! You played a word ending in 'ん'. Thanks for playing!"
+            else:
+                word_data+=form.word_data.data+",Please ensure your word is hiragana and not a repeated word."
             form.word_data.data=word_data
+        form.word_data.data=word_data
         return render_template('game.html', form=form, pastwords="")
+
+def get_new_word(past_words,start_character):
+    print(start_character)
+    df = load_jlpt_dataframe()
+    word = ''
+    translated = ''
+    (word,translated) = n_bound_path_search(past_words,start_character,df)
+    if word == '':
+        (word,translated) = repeat_attack_search(past_words,start_character,df)
+        if word == '':
+            (word,translated) = get_any_word(past_words,start_character,df)
+    return (word,translated)
+
+def repeat_attack_search(past_words,start_character,df):
+    character_count = {}
+    past_word_arr = past_words.split(',')
+    for wrd in past_word_arr:
+        end_char = wrd[-1:]
+        if end_char in character_count:
+            character_count[end_char] += 1
+        else:
+            character_count[end_char] = 1
+    try:
+        max_key = max(character_count.keys(), key=character_count.get())
+        for index,row in df.iterrows():
+            if row['hiragana'][-1:] == max_key and row['hiragana'][0]==start_character and ','+row['hiragana']+',' not in past_words:
+                return row['hiragana'],row['translation']
+    except:
+        a=''
+    return '',''
+
+def n_bound_path_search(past_words,start_character,df):
+    word = ''
+    word_n_count_path={}
+    for index,row in df.iterrows():
+        if ',' + row['hiragana'] + ',' in past_words or row['hiragana'][0] != start_character:
+            continue
+        else:
+            word_n_count_path[row['hiragana']]=0
+            for x,r in df.iterrows():
+                if r['hiragana'] not in past_words and r['hiragana'] != row['hiragana'] and r[0]==start_character and r[-1:]=='ん':
+                    word_n_count_path[row['hiragana']]+=1
+    trans = ''
+    try:
+        word=max(word_n_count_path.keys(), key=word_n_count_path.get())
+        for index,row in df.iterrows():
+            if row['hiragana'] == word:
+                trans = row['translation']
+                break
+        f=''
+    except:
+        word=''
+    return word,trans
+
+def get_any_word(past_words,start_character,df):
+    word = ''
+    trans = ''
+
+    for index, row in df.iterrows():
+        if row['hiragana'] not in past_words and row['hiragana'][0] == start_character:
+            word = row['hiragana']
+            trans = row['translation']
+            break
+    print(word)
+    print(trans)
+    return word,trans
 
 def parse_for_translation_exists(data):
     arrs = data['translation']
@@ -148,6 +173,7 @@ def find_most_n_word_ending(playable_kana_ends,arr,past_words):
 
 def load_jlpt_dataframe():
     df = pd.read_csv('./assets/jlpt_words.csv',encoding='utf_8')
+    df.columns=['index','hiragana','romaji','kanji','translation','example_usage']
     return df
 
 def special_match(strg, search=re.compile(r'[ぁ-ゟあ]').search):
