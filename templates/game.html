@@ -194,7 +194,7 @@
     <div class="cont">
     <div class="game-form-container">
 
-        <form class="game-form-inner" action="" method="post" autocomplete="off">
+        <form class="game-form-inner" id="gameform" action="" method="post" autocomplete="off">
           {{form.csrf}}
           <div class="header flex">
              <div class="header-item">
@@ -305,8 +305,8 @@
           document.getElementById('word_data').value="New game started! "+messages.split(',')[0];
           document.getElementById('word').value="";
           document.getElementById('past_words').value="";
+          document.getElementById('gameform').submit();
 
-          Render();
         }
 
       }
