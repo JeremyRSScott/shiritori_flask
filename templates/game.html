@@ -187,7 +187,7 @@
       }
 
     </style>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1,user-scalable=0">
 
   </head>
   <body>
@@ -282,6 +282,10 @@
         document.getElementById("word").focus();
       }
       Render();
+      function Scrollz(){
+        var element = document.getElementById("msg-container");
+        element.scrollTop = element.scrollHeight;
+      }
       Scrollz();
     </script>
     <script>

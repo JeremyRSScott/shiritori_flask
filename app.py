@@ -14,16 +14,16 @@ DEBUG = True
 TEMPLATE_DIR=os.path.abspath('./templates')
 STATIC_DIR=os.path.abspath('./static')
 
-app = Flask(__name__,template_folder=TEMPLATE_DIR, static_folder=STATIC_DIR)
-#app.config.from_object(__name__)
-app.config['SECRET_KEY'] = '7d441f27d441f27567d441f2b6176a'
+application = Flask(__name__,template_folder=TEMPLATE_DIR, static_folder=STATIC_DIR)
+#config.from_object(__name__)
+application.config['SECRET_KEY'] = '7d441f27d441f27567d441f2b6176a'
 
 class ReusableForm(Form):
     word = TextField('Word:', validators=[validators.required()])
     past_words =  TextField('Past Words:', validators=[])
     word_data = TextField('Word Data:',validators=[])
 
-    @app.route("/", methods=['GET', 'POST'])
+    @application.route("/", methods=['GET', 'POST'])
     def Play():
         form = ReusableForm(request.form)
 
@@ -81,10 +81,10 @@ def get_new_word(past_words,start_character):
 
     translated = ''
     rng = random.randrange(0,100)
-    if rng >=50:
-        (word,translated) = n_bound_path_search(past_words,start_character,df)
-    else:
-        (word,translated) = repeat_attack_search(past_words,start_character,df)
+    #if rng >=50:
+    #    (word,translated) = n_bound_path_search(past_words,start_character,df)
+    #else:
+    #    (word,translated) = repeat_attack_search(past_words,start_character,df)
     if word == '':
             (word,translated) = get_any_word(past_words,start_character,df)
     return (word,translated)
@@ -2050,4 +2050,4 @@ def valid_word_played(played_word,past_words):
 
 
 if __name__ == "__main__":
-    app.run()
+    application.run()
