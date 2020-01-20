@@ -36,7 +36,7 @@ class ReusableForm(Form):
 
             word = request.form['word']
             past_words = ''
-        word_data='Welcome! Please enter any valid Japanese word in Hiragana to get started.'
+        word_data='Welcome to the Shiritori Game! Please enter any valid word to get started. Good luck!'
         if form.validate() and special_match(word) and word[-1:]!='ん' and word!="" and valid_translate(word, translation.extra_data):
             if(valid_word_played(word,request.form['past_words'])):
                 if(request.form['past_words']==''):
@@ -57,7 +57,7 @@ class ReusableForm(Form):
                 form.word.data=""
                 form.word_data.data=word_data
             else:
-                word_data+=form.word_data.data+",Please ensure your word is hiragana and not a repeated word. Please try again."
+                word_data+=form.word_data.data+",1. All words must start with the ending Kana of the previous word. 2. Words cannot end in \'ん\'. 3. Words cannot be repeated. 4. Words cannot end in little kanas. 5. Words cannot translate to themselves in romaji(eg. names)."
                 form.word_data.data=word_data
                 form.word.data=""
         else:
@@ -65,7 +65,7 @@ class ReusableForm(Form):
                 a=translator.translate(word)
                 word_data+=form.word_data.data+","+word+"-"+parse_for_translation(translation.extra_data)+",Game over! You played a word ending in 'ん'. Thanks for playing!"
             else:
-                word_data+=form.word_data.data+",Please ensure your word is hiragana and not a repeated word."
+                word_data+=form.word_data.data+",1. All words must start with the ending Kana of the previous word. 2. Words cannot end in \'ん\'. 3. Words cannot be repeated. 4. Words cannot end in little kanas. 5. Words cannot translate to themselves in romaji(eg. names)."
             form.word_data.data=word_data
         form.word_data.data=word_data
         return render_template('game.html', form=form, pastwords="")
