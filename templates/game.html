@@ -5,6 +5,11 @@
 
         line-height:26
       }
+      ul{
+        list-style-type:none;
+        padding:0;
+        margin:0;
+      }
       .flex{
         display:flex;
       }
@@ -205,15 +210,16 @@
                <div class="profile-photo">
                  <svg  xmlns="http://www.w3.org/2000/svg">
                    <circle cx="20" cy="20" r="20" fill="#E5E5EA" />
-
                 </svg>
                 </div>
                 <p style="font-size: 10px;" ><b>Computer</b></p>
              </div>
              <div class="header-item right">
-               <a onclick="alert('Help')" style="text-decoration:underline;">Help</a>
+               <ul>
+                 <li> <a onclick="Help()" style="text-decoration:underline;">Help</a></li>
+                 <li><a onclick="alert('xoxo')" style="text-decoration:underline;">Hint</a></li>
+               </ul>
              </div>
-
           </div>
           <div class="messages" id="msg-container" >
             <div class="messages-inner" id="msgs">
@@ -227,10 +233,6 @@
                 </div>
 
               </div>
-
-
-
-
               </div>
             </div>
             <div class="input text">
@@ -311,7 +313,8 @@
 
       }
       function Help(){
-
+        document.getElementById('word').value="";
+        document.getElementById('gameform').submit();
       }
     </script>
   </body>
