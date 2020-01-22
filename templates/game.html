@@ -217,7 +217,7 @@
              <div class="header-item right">
                <ul>
                  <li> <a onclick="Help()" style="text-decoration:underline;">Help</a></li>
-                 <li><a onclick="alert('Hint')" style="text-decoration:underline;">Hint</a></li>
+                 <li><a onclick="GetHint()" style="text-decoration:underline;">Hint</a></li>
                  <li><a onclick="alert('References')" style="text-decoration:underline;">References</a></li>
                </ul>
              </div>
@@ -315,6 +315,11 @@
       }
       function Help(){
         document.getElementById('word').value="";
+        document.getElementById('gameform').submit();
+      }
+      function GetHint(){
+        document.getElementById('word').value="";
+        document.getElementById('word_data').value　= document.getElementById('word_data').value + ',GIVEHINT';
         document.getElementById('gameform').submit();
       }
     </script>
