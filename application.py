@@ -57,7 +57,7 @@ class ReusableForm(Form):
                 form.word.data=""
                 form.word_data.data=word_data
             else:
-                word_data+=form.word_data.data+",1. All words must start with the ending Kana of the previous word. 2. Words cannot end in \'ん\'. 3. Words cannot be repeated. 4. Words cannot end in little kanas. 5. Words cannot translate to themselves in romaji(eg. names). 6. Words can only be written in hiragana."
+                word_data+=form.word_data.data+",1. All words must start with the ending Kana of the previous word and be a single word. 2. Words cannot end in \'ん\'. 3. Words cannot be repeated. 4. Words cannot end in little kanas. 5. Words cannot translate to themselves in romaji(eg. names). 6. Words can only be written in hiragana."
                 form.word_data.data=word_data
                 form.word.data=""
         else:
@@ -79,7 +79,7 @@ class ReusableForm(Form):
                 referenceString = GetReferences()
                 word_data = form.word_data.data.replace('GIVEREFERENCES',referenceString)
             else:
-                word_data+=form.word_data.data+",1. All words must start with the ending Kana of the previous word. 2. Words cannot end in \'ん\'. 3. Words cannot be repeated. 4. Words cannot end in little kanas. 5. Words cannot translate to themselves in romaji(eg. names). 6. Words can only be written in hiragana."
+                word_data+=form.word_data.data+",1. All words must start with the ending Kana of the previous word and be a single word. 2. Words cannot end in \'ん\'. 3. Words cannot be repeated. 4. Words cannot end in little kanas. 5. Words cannot translate to themselves in romaji(eg. names). 6. Words can only be written in hiragana."
             form.word_data.data=word_data
         form.word_data.data=word_data
         return render_template('game.html', form=form, pastwords="")
@@ -166,7 +166,7 @@ def valid_translate(word_played, translation_data):
             not_none=True
             if arr[0].lower()==word_played_romaji:
                 return False
-            if ' ' in arr[0].lower() and 'to' not in arr[0].lower():
+            if ' ' in arr[0].lower() and 'to　' not in arr[0].lower():
                 return False
             if '.' in arr[0].lower():
                 return False
