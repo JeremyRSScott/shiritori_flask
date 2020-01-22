@@ -10,6 +10,12 @@
         padding:0;
         margin:0;
       }
+      a{
+        color:blue;
+      }
+      a:hover{
+        color:green;
+      }
       .flex{
         display:flex;
       }
@@ -261,7 +267,6 @@
               let split_str=played_words[i].split('-');
               let word_played=split_str[0];
               let meaning = split_str[1];
-
               if(x%2!=0){//user block
                   html+="<div class=\"card\"><div class=\"card container user\"><p class=\"card-meaning\">User played word: "+word_played+", which means: "+meaning+"</p></div></div>";
               }else{//computer block

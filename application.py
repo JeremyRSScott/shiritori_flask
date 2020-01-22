@@ -67,11 +67,14 @@ class ReusableForm(Form):
             if word in form.past_words.data and word!='':
                 word_data+=form.word_data.data+",Game over! You played a repeated word. Thanks for playing!"
             if ',GIVEHINT' in form.word_data.data:
-                wrd_arr = form.past_words.data.split(',')
-                last_word = wrd_arr[len(wrd_arr)-1]
-                start_char = last_word[-1:]
-                wrd,trns = get_new_word(form.past_words.data,start_char)
-                word_data=form.word_data.data.replace('GIVEHINT','A hint is a word that has the following English translation : '+trns)
+                if ',' not in form.past_words.data:
+                    word_data=form.word_data.data.replace('GIVEHINT','You have not even played a start word yet! Nice try :).') 
+                else:
+                    wrd_arr = form.past_words.data.split(',')
+                    last_word = wrd_arr[len(wrd_arr)-1]
+                    start_char = last_word[-1:]
+                    wrd,trns = get_new_word(form.past_words.data,start_char)
+                    word_data=form.word_data.data.replace('GIVEHINT','A hint is a word that has the following English translation : '+trns)
             else:
                 word_data+=form.word_data.data+",1. All words must start with the ending Kana of the previous word. 2. Words cannot end in \'ん\'. 3. Words cannot be repeated. 4. Words cannot end in little kanas. 5. Words cannot translate to themselves in romaji(eg. names). 6. Words can only be written in hiragana."
             form.word_data.data=word_data
