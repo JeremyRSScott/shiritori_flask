@@ -224,7 +224,7 @@
                <ul>
                  <li> <a onclick="Help()" style="text-decoration:underline;">Help</a></li>
                  <li><a onclick="GetHint()" style="text-decoration:underline;">Hint</a></li>
-                 <li><a onclick="alert('References')" style="text-decoration:underline;">References</a></li>
+                 <li><a onclick="GetReferences()" style="text-decoration:underline;">References</a></li>
                </ul>
              </div>
           </div>
@@ -278,8 +278,6 @@
             else{
               html+="<div class=\"card\"><div class=\"card container computer\"><p class=\"card-meaning\">"+played_words[i]+"</p></div></div>";
             }
-
-
           }
           document.getElementById('streak').innerHTML=Math.floor((x-1)/2);
         }else{
@@ -309,12 +307,10 @@
         let messages = document.getElementById('word_data').value;
         let words="";
         if(messages.includes(',')){
-
           document.getElementById('word_data').value="New game started! "+messages.split(',')[0];
           document.getElementById('word').value="";
           document.getElementById('past_words').value="";
           document.getElementById('gameform').submit();
-
         }
 
       }
@@ -326,6 +322,12 @@
         document.getElementById('word').value="";
         document.getElementById('word_data').value　= document.getElementById('word_data').value + ',GIVEHINT';
         document.getElementById('gameform').submit();
+      }
+      function GetReferences(){
+        document.getElementById('word').value="";
+        document.getElementById('word_data').value = document.getElementById('word_data').value+',GIVEREFERENCES';
+        document.getElementById('gameform').submit();
+
       }
     </script>
   </body>

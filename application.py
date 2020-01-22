@@ -37,7 +37,7 @@ class ReusableForm(Form):
             word = request.form['word']
             past_words = ''
         word_data='Welcome to the Shiritori Game! Please enter any valid word to get started. Good luck!'
-        if form.validate() and special_match(word) and word[-1:]!='ん' and word!="" and valid_translate(word, translation.extra_data) and ',GIVEHINT' not in form.past_words.data:
+        if form.validate() and special_match(word) and word[-1:]!='ん' and word!="" and valid_translate(word, translation.extra_data) and ',GIVEHINT' not in form.past_words.data and ',GIVEREFERENCES' not in form.past_words.data:
             if(valid_word_played(word,request.form['past_words'])):
                 if(request.form['past_words']==''):
                     past_words=request.form['word']
@@ -68,18 +68,26 @@ class ReusableForm(Form):
                 word_data+=form.word_data.data+",Game over! You played a repeated word. Thanks for playing!"
             if ',GIVEHINT' in form.word_data.data:
                 if ',' not in form.past_words.data:
-                    word_data=form.word_data.data.replace('GIVEHINT','You have not even played a start word yet! Nice try :).') 
+                    word_data=form.word_data.data.replace('GIVEHINT','You have not even played a start word yet! Nice try :).')
                 else:
                     wrd_arr = form.past_words.data.split(',')
                     last_word = wrd_arr[len(wrd_arr)-1]
                     start_char = last_word[-1:]
                     wrd,trns = get_new_word(form.past_words.data,start_char)
                     word_data=form.word_data.data.replace('GIVEHINT','A hint is a word that has the following English translation : '+trns)
+            if ',GIVEREFERENCES' in form.word_data.data:
+                referenceString = GetReferences()
+                word_data = form.word_data.data.replace('GIVEREFERENCES',referenceString)
             else:
                 word_data+=form.word_data.data+",1. All words must start with the ending Kana of the previous word. 2. Words cannot end in \'ん\'. 3. Words cannot be repeated. 4. Words cannot end in little kanas. 5. Words cannot translate to themselves in romaji(eg. names). 6. Words can only be written in hiragana."
             form.word_data.data=word_data
         form.word_data.data=word_data
         return render_template('game.html', form=form, pastwords="")
+
+def GetReferences():
+    return 'References are as follows, 1. Referencey reference reference'
+
+
 
 def get_new_word(past_words,start_character):
     df = load_jlpt_dataframe()
@@ -158,7 +166,12 @@ def valid_translate(word_played, translation_data):
             not_none=True
             if arr[0].lower()==word_played_romaji:
                 return False
+            if ' ' in arr[0].lower() and 'to' not in arr[0].lower():
+                return False
+            if '.' in arr[0].lower():
+                return False
     return not_none
+
 
 def parse_for_translation_exists(data):
     arrs = data['translation']
