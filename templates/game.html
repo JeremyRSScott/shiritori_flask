@@ -254,12 +254,11 @@
         </div>
 
     <script>
-      let original_html=document.getElementById("msgs").innerHTML=document.getElementById("msgs").innerHTML;
+
       function Render(){
       let played_words_csv = document.getElementById("word_data").value;
       html ="";
       if(played_words_csv.includes(',')){
-
           let played_words=played_words_csv.split(',');
           html+="<div class=\"card\"><div class=\"card container computer\"><p class=\"card-meaning\">"+played_words[0]+"</p></div></div>";
           let x=1;
@@ -271,7 +270,6 @@
               if(x%2!=0){//user block
                   html+="<div class=\"card\"><div class=\"card container user\"><p class=\"card-meaning\">User played word: "+word_played+", which means: "+meaning+"</p></div></div>";
               }else{//computer block
-
                   html+="<div class=\"card\"><div class=\"card container computer\"><p class=\"card-meaning\">Computer played word: "+word_played+", which means: "+meaning+"</p></div></div>";
               }
               x+=1;
@@ -284,7 +282,6 @@
         }else{
           html += "<div class=\"card\"><div class=\"card container computer\"><p class=\"card-meaning\">"+played_words_csv+"</p></div></div>";
         }
-
         document.getElementById("msgs").innerHTML=document.getElementById("msgs").innerHTML + html;
         document.getElementById("word").focus();
       }
@@ -308,12 +305,11 @@
         let messages = document.getElementById('word_data').value;
         let words="";
         if(messages.includes(',')){
-          document.getElementById('word_data').value="New game started! "+messages.split(',')[0];
+          document.getElementById('word_data').value=""+messages.split(',')[0];
           document.getElementById('word').value="";
           document.getElementById('past_words').value="";
           document.getElementById('gameform').submit();
         }
-
       }
       function Help(){
         document.getElementById('word').value="";
@@ -328,6 +324,8 @@
         document.getElementById('word').value="";
         document.getElementById('word_data').value = document.getElementById('word_data').value+',GIVEREFERENCES';
         document.getElementById('gameform').submit();
+      }
+      function HowToPlay(){
 
       }
     </script>

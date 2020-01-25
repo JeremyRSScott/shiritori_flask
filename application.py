@@ -88,7 +88,7 @@ class ReusableForm(Form):
                 word_data = form.word_data.data.replace('GIVEREFERENCES',referenceString)
             else:
                 word_data+=form.word_data.data+",1. All words must start with the ending Kana of the previous word and be a single word. 2. Words cannot end in \'ん\'. 3. Words cannot be repeated. 4. Words cannot end in little kanas. 5. Words cannot translate to themselves in romaji(eg. names). 6. Words can only be written in hiragana."
-            
+
             form.word_data.data=word_data
         form.word_data.data=word_data
         return render_template('game.html', form=form, pastwords="")
@@ -175,12 +175,11 @@ def valid_translate(word_played, translation_data):
             not_none=True
             if arr[0].lower()==word_played_romaji:
                 return False
-            if ' ' in arr[0].lower() and 'to　' not in arr[0].lower():
+            elif ' ' in arr[0].lower() and 'to　' not in arr[0].lower():
                 return False
-            if '.' in arr[0].lower():
+            elif '.' in arr[0].lower():
                 return False
     return not_none
-
 
 def parse_for_translation_exists(data):
     arrs = data['translation']
@@ -211,9 +210,7 @@ def find_most_n_word_ending(playable_kana_ends,arr,past_words):
                     if x[1][-1:] == 'ん' and item[1][-1:]==x[1][0] and x[1] not in past_words:
                         kvp[item[1]]+=1
     max_word = max(kvp.items(), key=operator.itemgetter(1))[0]
-    print("Max is : " + max_word)
     return max_word
-
 
 def load_jlpt_dataframe():
     df = pd.read_csv('./assets/jlpt_words.csv',encoding='utf_8')
