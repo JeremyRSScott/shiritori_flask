@@ -29,14 +29,19 @@ class ReusableForm(Form):
     def Play():
         form = ReusableForm(request.form)
         word=""
+        word_data=""
         translator=Translator()
         translation=''
         if request.method == 'POST':
             translation = translator.translate(request.form['word'])
-            pastwrd = request.form['past_words']
+            past_words = request.form['past_words']
             word = request.form['word']
+            word_data=request.form['word_data']
             past_words = ''
-        word_data='Welcome to the Shiritori Game! Please enter any valid word to get started. Good luck!'
+
+        if word_data=='':
+            word_data='Welcome to the Shiritori Game! Please enter any valid word to get started. Good luck!'
+
         if form.validate() and special_match(word) and word[-1:]!='ん' and word!="" and valid_translate(word, translation.extra_data) and ',GIVEHINT' not in form.past_words.data and ',GIVEREFERENCES' not in form.past_words.data:
             if(valid_word_played(word,request.form['past_words'])):
                 if(request.form['past_words']==''):
@@ -64,22 +69,26 @@ class ReusableForm(Form):
             if(word[-1:]=='ん'):
                 a=translator.translate(word)
                 word_data+=form.word_data.data+","+word+"-"+parse_for_translation(translation.extra_data)+",Game over! You played a word ending in 'ん'. Thanks for playing!"
-            if word in form.past_words.data and word!='':
+            elif word in form.past_words.data and word!='':
                 word_data+=form.word_data.data+",Game over! You played a repeated word. Thanks for playing!"
-            if ',GIVEHINT' in form.word_data.data:
-                if ',' not in form.past_words.data:
-                    word_data=form.word_data.data.replace('GIVEHINT','You have not even played a start word yet! Nice try :).')
+            elif ',GIVEHINT' in word_data:
+                if ',' not in request.form['past_words']:
+
+                    word_data=word_data.replace('GIVEHINT','You have not even played a start word yet! Nice try :).')
                 else:
-                    wrd_arr = form.past_words.data.split(',')
+                    wrd_arr = request.form['past_words'].split(',')
                     last_word = wrd_arr[len(wrd_arr)-1]
                     start_char = last_word[-1:]
-                    wrd,trns = get_new_word(form.past_words.data,start_char)
-                    word_data=form.word_data.data.replace('GIVEHINT','A hint is a word that has the following English translation : '+trns)
-            if ',GIVEREFERENCES' in form.word_data.data:
+                    wrd,trns = get_new_word(request.form['past_words'],start_char)
+
+                    word_data=word_data.replace('GIVEHINT','A hint is a word that has the following English translation : '+trns)
+
+            elif ',GIVEREFERENCES' in form.word_data.data:
                 referenceString = GetReferences()
                 word_data = form.word_data.data.replace('GIVEREFERENCES',referenceString)
             else:
                 word_data+=form.word_data.data+",1. All words must start with the ending Kana of the previous word and be a single word. 2. Words cannot end in \'ん\'. 3. Words cannot be repeated. 4. Words cannot end in little kanas. 5. Words cannot translate to themselves in romaji(eg. names). 6. Words can only be written in hiragana."
+            
             form.word_data.data=word_data
         form.word_data.data=word_data
         return render_template('game.html', form=form, pastwords="")
