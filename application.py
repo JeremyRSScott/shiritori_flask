@@ -159,12 +159,17 @@ def get_any_word(past_words,start_character,df):
     print("fallback")
     word = ''
     trans = ''
+    word_options = []
+    i=0
     for index, row in df.iterrows():
         if row['hiragana'] not in past_words and row['hiragana'][0] == start_character and row['hiragana'][-1:]!='ん':
             word = row['hiragana']
             trans = row['translation']
-            break
-    return word,trans
+            word_options.append((word,trans))
+            i+=1
+            if(i==5):
+                break
+    return random.choice(word_options)
 
 def valid_translate(word_played, translation_data):
     word_played_romaji = romkan.to_roma(word_played)
@@ -173,9 +178,9 @@ def valid_translate(word_played, translation_data):
     for arr in arrs:
         if arr[0]!=None:
             not_none=True
-            if arr[0].lower()==word_played_romaji:
-                return False
-            elif ' ' in arr[0].lower() and 'to　' not in arr[0].lower():
+            #if arr[0].lower()==word_played_romaji:
+            #    return False
+            if ' ' in arr[0].lower() and 'to　' not in arr[0].lower():
                 return False
             elif '.' in arr[0].lower():
                 return False

@@ -130,7 +130,7 @@
         width:75%;
         padding:0.5%;
         border-radius:25px;
-        font-size:12px;
+        font-size:13px;
         margin-bottom:20px;
         position:relative;
         padding:10px 20px;
@@ -305,7 +305,7 @@
         let messages = document.getElementById('word_data').value;
         let words="";
         if(messages.includes(',')){
-          document.getElementById('word_data').value=""+messages.split(',')[0];
+          document.getElementById('word_data').value="";
           document.getElementById('word').value="";
           document.getElementById('past_words').value="";
           document.getElementById('gameform').submit();
