@@ -102,7 +102,7 @@ class ReusableForm(Form):
         return render_template('game.html', form=form, pastwords="")
 
 def GetReferences():
-    return '<u>References </u>, 1. Murata&#44; M.&#44; & Shirado&#44; T. (2015). Statistical Investigation of a Japanese Word Chain Game. International Information Institute (Tokyo). Information&#44; 18(5(A))&#44; 1631.,2. locksleyu&#44; 2015&#44; Shiritori: Japanese Word Game&#44; http://selftaughtjapanese.com/2015/04/15/shiritori&#45;japanese&#45;word&#45;game/,3. Stack Overflow&#44; (2011)&#44; What issues lead people to use Japanese&#45;specific encodings rather than Unicode?&#44; https://softwareengineering.stackexchange.com/questions/82396/what&#45;issues&#45;lead&#45;people&#45;to&#45;use&#45;japanese&#45;specific&#45;encodings&#45;rather&#45;than&#45;unicode/82397,4. Tasarim&#44;Iphone6 Image&#44;http://www.adobewordpress.com/tasarim/images/iphone6.png.,5. Michael Gakuran&#44;Japanese_jlpt1_lite Japanese Dictionary&#44;http://gakuran.com/japanese-csv-database/.,Project By: Jeremy Scott&#44; 43259014.'
+    return '<u>References </u>, 1. Murata&#44; M.&#44; & Shirado&#44; T. (2015). Statistical Investigation of a Japanese Word Chain Game. International Information Institute (Tokyo). Information&#44; 18(5(A))&#44; 1631.,2. locksleyu&#44; 2015&#44; Shiritori: Japanese Word Game&#44; http://selftaughtjapanese.com/2015/04/15/shiritori&#45;japanese&#45;word&#45;game/,3. Stack Overflow&#44; (2011)&#44; What issues lead people to use Japanese&#45;specific encodings rather than Unicode?&#44; https://softwareengineering.stackexchange.com/questions/82396/what&#45;issues&#45;lead&#45;people&#45;to&#45;use&#45;japanese&#45;specific&#45;encodings&#45;rather&#45;than&#45;unicode/82397,4. Tasarim&#44;Iphone6 Image&#44;http://www.adobewordpress.com/tasarim/images/iphone6.png.,5. Michael Gakuran&#44;Japanese_jlpt1_lite Japanese Dictionary&#44;http://gakuran.com/japanese&#45;csv&#45;database/.,Project By: Jeremy Scott&#44; 43259014.'
 
 
 
@@ -164,7 +164,7 @@ def n_bound_path_search(past_words,start_character,df):
     return word,trans
 
 def get_any_word(past_words,start_character,df):
-    
+
     word = ''
     trans = ''
     word_options = []
