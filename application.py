@@ -94,7 +94,7 @@ class ReusableForm(Form):
         return render_template('game.html', form=form, pastwords="")
 
 def GetReferences():
-    return 'References are as follows, 1. Referencey reference reference'
+    return '<u>References </u>, 1. Murata&#44; M.&#44; & Shirado&#44; T. (2015). Statistical Investigation of a Japanese Word Chain Game. International Information Institute (Tokyo). Information&#44; 18(5(A))&#44; 1631.,2. locksleyu&#44; 2015&#44; Shiritori: Japanese Word Game&#44; http://selftaughtjapanese.com/2015/04/15/shiritori&#45;japanese&#45;word&#45;game/,3. Stack Overflow&#44; (2011)&#44; What issues lead people to use Japanese&#45;specific encodings rather than Unicode?&#44; https://softwareengineering.stackexchange.com/questions/82396/what&#45;issues&#45;lead&#45;people&#45;to&#45;use&#45;japanese&#45;specific&#45;encodings&#45;rather&#45;than&#45;unicode/82397,4. Tasarim&#44;Iphone6 Image&#44;http://www.adobewordpress.com/tasarim/images/iphone6.png'
 
 
 
