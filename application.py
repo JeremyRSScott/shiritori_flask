@@ -32,6 +32,7 @@ class ReusableForm(Form):
         word_data=""
         translator=Translator()
         translation=''
+        past_words=''
         if request.method == 'POST':
             translation = translator.translate(request.form['word'])
             past_words = request.form['past_words']
@@ -69,7 +70,7 @@ class ReusableForm(Form):
             if(word[-1:]=='ん'):
                 a=translator.translate(word)
                 word_data+=form.word_data.data+","+word+"-"+parse_for_translation(translation.extra_data)+",Game over! You played a word ending in 'ん'. Thanks for playing!"
-            elif word in form.past_words.data and word!='':
+            elif word in past_words and word!='':
                 word_data+=form.word_data.data+",Game over! You played a repeated word. Thanks for playing!"
             elif ',GIVEHINT' in word_data:
                 if ',' not in request.form['past_words']:
