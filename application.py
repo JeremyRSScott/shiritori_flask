@@ -40,7 +40,7 @@ class ReusableForm(Form):
             past_words = ''
 
         if word_data=='':
-            word_data='Welcome to the Shiritori Game! Please enter any valid word to get started. Good luck!'
+            word_data='Welcome to the Shiritori Game! Shiritori is a Japanese Chain Word Game. Please enter any valid word to get started. Good luck!'
 
         if form.validate() and special_match(word) and word[-1:]!='ん' and word!="" and valid_translate(word, translation.extra_data) and ',GIVEHINT' not in form.past_words.data and ',GIVEREFERENCES' not in form.past_words.data:
             if(valid_word_played(word,request.form['past_words'])):
@@ -62,7 +62,7 @@ class ReusableForm(Form):
                 form.word.data=""
                 form.word_data.data=word_data
             else:
-                word_data+=form.word_data.data+",1. All words must start with the ending Kana of the previous word and be a single word. 2. Words cannot end in \'ん\'. 3. Words cannot be repeated. 4. Words cannot end in little kanas. 5. Words cannot translate to themselves in romaji(eg. names). 6. Words can only be written in hiragana."
+                word_data+=form.word_data.data+",1. All words must start with the ending Kana of the previous word and be a single word. 2. Words cannot end in \'ん\'. 3. Words cannot be repeated. 4. Words cannot end in little kanas. 5. Words can only be written in hiragana."
                 form.word_data.data=word_data
                 form.word.data=""
         else:
@@ -87,14 +87,14 @@ class ReusableForm(Form):
                 referenceString = GetReferences()
                 word_data = form.word_data.data.replace('GIVEREFERENCES',referenceString)
             else:
-                word_data+=form.word_data.data+",1. All words must start with the ending Kana of the previous word and be a single word. 2. Words cannot end in \'ん\'. 3. Words cannot be repeated. 4. Words cannot end in little kanas. 5. Words cannot translate to themselves in romaji(eg. names). 6. Words can only be written in hiragana."
+                word_data+=form.word_data.data+",1. All words must start with the ending Kana of the previous word and be a single word. 2. Words cannot end in \'ん\'. 3. Words cannot be repeated. 4. Words cannot end in little kanas. 5. Words can only be written in hiragana."
 
             form.word_data.data=word_data
         form.word_data.data=word_data
         return render_template('game.html', form=form, pastwords="")
 
 def GetReferences():
-    return '<u>References </u>, 1. Murata&#44; M.&#44; & Shirado&#44; T. (2015). Statistical Investigation of a Japanese Word Chain Game. International Information Institute (Tokyo). Information&#44; 18(5(A))&#44; 1631.,2. locksleyu&#44; 2015&#44; Shiritori: Japanese Word Game&#44; http://selftaughtjapanese.com/2015/04/15/shiritori&#45;japanese&#45;word&#45;game/,3. Stack Overflow&#44; (2011)&#44; What issues lead people to use Japanese&#45;specific encodings rather than Unicode?&#44; https://softwareengineering.stackexchange.com/questions/82396/what&#45;issues&#45;lead&#45;people&#45;to&#45;use&#45;japanese&#45;specific&#45;encodings&#45;rather&#45;than&#45;unicode/82397,4. Tasarim&#44;Iphone6 Image&#44;http://www.adobewordpress.com/tasarim/images/iphone6.png'
+    return '<u>References </u>, 1. Murata&#44; M.&#44; & Shirado&#44; T. (2015). Statistical Investigation of a Japanese Word Chain Game. International Information Institute (Tokyo). Information&#44; 18(5(A))&#44; 1631.,2. locksleyu&#44; 2015&#44; Shiritori: Japanese Word Game&#44; http://selftaughtjapanese.com/2015/04/15/shiritori&#45;japanese&#45;word&#45;game/,3. Stack Overflow&#44; (2011)&#44; What issues lead people to use Japanese&#45;specific encodings rather than Unicode?&#44; https://softwareengineering.stackexchange.com/questions/82396/what&#45;issues&#45;lead&#45;people&#45;to&#45;use&#45;japanese&#45;specific&#45;encodings&#45;rather&#45;than&#45;unicode/82397,4. Tasarim&#44;Iphone6 Image&#44;http://www.adobewordpress.com/tasarim/images/iphone6.png.,Project By: Jeremy Scott&#44; 43259014.'
 
 
 
