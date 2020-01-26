@@ -104,10 +104,10 @@ def get_new_word(past_words,start_character):
     word = ''
     translated = ''
     rng = random.randrange(0,100)
-    if rng >=50:
-        (word,translated) = n_bound_path_search(past_words,start_character,df)
-    else:
-        (word,translated) = repeat_attack_search(past_words,start_character,df)
+    #if rng >=50:
+    #    (word,translated) = n_bound_path_search(past_words,start_character,df)
+    #else:
+    #    (word,translated) = repeat_attack_search(past_words,start_character,df)
     if word == '':
             (word,translated) = get_any_word(past_words,start_character,df)
     return (word,translated)
