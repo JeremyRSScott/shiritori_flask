@@ -36,9 +36,10 @@ class ReusableForm(Form):
         if request.method == 'POST':
             translation = translator.translate(request.form['word'])
             past_words = request.form['past_words']
+
+
             word = request.form['word']
             word_data=request.form['word_data']
-            past_words = ''
 
         if word_data=='':
             word_data='Welcome to the Shiritori Game! Shiritori is a Japanese Chain Word Game. Please enter any valid word to get started. Good luck!'
@@ -63,9 +64,14 @@ class ReusableForm(Form):
                 form.word.data=""
                 form.word_data.data=word_data
             else:
-                word_data+=form.word_data.data+",1. All words must start with the ending Kana of the previous word and be a single word. 2. Words cannot end in \'ん\'. 3. Words cannot be repeated. 4. Words cannot end in little kanas. 5. Words can only be written in hiragana."
-                form.word_data.data=word_data
-                form.word.data=""
+
+                if word in past_words and word!='':
+                    word_data+=form.word_data.data+",Game over! You played a repeated word. Thanks for playing!"
+                else:
+
+                    word_data+=form.word_data.data+",1. All words must start with the ending Kana of the previous word and be a single word. 2. Words cannot end in \'ん\'. 3. Words cannot be repeated. 4. Words cannot end in little kanas. 5. Words can only be written in hiragana."
+                    form.word_data.data=word_data
+                    form.word.data=""
         else:
             if(word[-1:]=='ん'):
                 a=translator.translate(word)
@@ -88,6 +94,7 @@ class ReusableForm(Form):
                 referenceString = GetReferences()
                 word_data = form.word_data.data.replace('GIVEREFERENCES',referenceString)
             else:
+
                 word_data+=form.word_data.data+",1. All words must start with the ending Kana of the previous word and be a single word. 2. Words cannot end in \'ん\'. 3. Words cannot be repeated. 4. Words cannot end in little kanas. 5. Words can only be written in hiragana."
 
             form.word_data.data=word_data
@@ -123,7 +130,7 @@ def repeat_attack_search(past_words,start_character,df):
             character_count[end_char] = 1
     try:
         max_key = max(character_count.keys(), key=character_count.get())
-        print(max_key)
+
         for index,row in df.iterrows():
             if row['hiragana'][-1:] == max_key and row['hiragana'][0]==start_character and ','+row['hiragana']+',' not in past_words:
                 return row['hiragana'],row['translation']
@@ -157,7 +164,7 @@ def n_bound_path_search(past_words,start_character,df):
     return word,trans
 
 def get_any_word(past_words,start_character,df):
-    print("fallback")
+    
     word = ''
     trans = ''
     word_options = []
